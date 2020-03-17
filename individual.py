@@ -4,15 +4,25 @@
     Github: https://github.com/RafalUzarowicz
 """
 
-class Individual:
-    __gen = []
+from numpy import array
 
-    def getGen(self):
+
+class Individual():
+
+    def __init__(self):
+        self.__gen = array([])
+
+    @property
+    def genotype(self):
+        print("Getting genotype.")
         return self.__gen
 
-    def setGen(self, gen):
+    @genotype.setter
+    def genotype(self, gen):
+        print("Setting genotype.")
         self.__gen = gen
 
-    def getFeno(self):
+    @property
+    def fenotype(self):
+        print("Getting fenotype.")
         return self.__gen
-
