@@ -12,6 +12,12 @@ class Individual():
     def __init__(self):
         self.__gen = array([])
 
+    def __str__(self):
+        return "Fenotype: {}".format(self.__gen)
+
+    def __repr__(self):
+        return str(self)
+
     @property
     def genotype(self):
         print("Getting genotype.")
