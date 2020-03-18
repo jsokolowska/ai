@@ -1,7 +1,7 @@
 """
     Created by: Rafal Uzarowicz
-    Created: 17.03.2020
-    Last modification: 18.03.2020
+    Date of creation: 17.03.2020
+    Date of last modification: 18.03.2020
     Github: https://github.com/RafalUzarowicz
 """
 
@@ -18,7 +18,7 @@ class Individual():
         if self.__name == "":
             return "Fenotype: {}".format(self.__gen)
         else:
-            return "Name: {} - Fenotype {}".format(self.__name, self.__gen)
+            return "Name: \"{}\" - Fenotype: {}".format(self.__name, self.__gen)
 
     def __repr__(self):
         return str(self)
