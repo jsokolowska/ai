@@ -10,40 +10,41 @@ from numpy import array
 
 class Individual():
 
-    def __init__(self):
-        self.__gen = array([])
-        self.__name = ""
+    def __init__(self, genotype=None):
+        if genotype is None:
+            genotype = []
+
+        self.__genotype = array(genotype)
+        self.__fitness = None
 
     def __str__(self):
-        if self.__name == "":
-            return "Fenotype: {}".format(self.__gen)
+        if self.__fitness is None:
+            return "Fenotype: {0}".format(self.__genotype)
         else:
-            return "Name: \"{}\" - Fenotype: {}".format(self.__name, self.__gen)
+            return "Fitness: \"{0}\" - Fenotype: {1}".format(self.__fitness, self.__genotype)
 
     def __repr__(self):
         return str(self)
 
+    def generateFenotype(self):
+        return self.__genotype
+
     @property
     def genotype(self):
         print("Getting genotype.")
-        return self.__gen
+        return self.__genotype
 
     @genotype.setter
-    def genotype(self, gen):
+    def genotype(self, newGenotype):
         print("Setting genotype.")
-        self.__gen = gen
+        self.__genotype = newGenotype
 
     @property
-    def fenotype(self):
-        print("Getting fenotype.")
-        return self.__gen
+    def fitness(self):
+        print("Getting fitness")
+        return self.__fitness
 
-    @property
-    def name(self):
-        print("Getting name")
-        return self.__name
-
-    @name.setter
-    def name(self, newName):
+    @fitness.setter
+    def fitness(self, newFitness):
         print("Setting name")
-        self.__name = newName
+        self.__fitness = newFitness
