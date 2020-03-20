@@ -81,6 +81,7 @@ class SwapGeneMutation(Mutation):
 
         This mutation type happens at most once within given genotype
         Works on any gene type, only swap operation is performed
+        Useful for genotypes that represent permutations
     """
     def mutate(self, genotype: []) -> None:
         """
@@ -101,12 +102,33 @@ class SwapGeneMutation(Mutation):
 
             genotype[pos1], genotype[pos2] = genotype[pos2], genotype[pos1]
 
-    def mutateGene(self, gene) -> None:
-        """
-            Gene mutation is handled in mutate() function therefore this
-            function does nothing
 
-        :param gene: any gene type
+class ScrambleGenesMutation(Mutation):
+    """
+        Mutation type that scramble genes within randomly chosen range
+
+        This mutation type happens at most once within given genotype
+        Works on any gene type, genes can only change position
+        Useful for genotypes that represent permutations
+    """
+    def mutate(self, genotype: []) -> None:
+        """
+            Performs mutation instead of mutateGene() function
+
+            When mutation occurs, a position and scramble range are
+            randomly chosen, then genes within that range are shuffled
+
+        :param genotype: genotype of given individual
         :return: None
         """
-        pass
+        assert len(genotype) >= 2
+
+        if 0.0 < random.uniform(0.0, 1.0) <= self.mutation_chance:
+            scramble_range = random.randint(2, len(genotype))   # Scramble at least 2 genes to be effective
+            position = random.randint(0, len(genotype) - scramble_range)    # Prevents from going out of range
+
+            # Fisher-Yates shuffle algorithm
+            for i in range(position + scramble_range - 1, position, -1):
+                j = random.randint(position, i)
+
+                genotype[i], genotype[j] = genotype[j], genotype[i]
