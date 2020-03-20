@@ -12,18 +12,18 @@ class Selection:
     User can manipulate selection by adjusting number_of_chosen parameter.
     """
 
-    def __init__(self, number_of_chosen):
-        self.number_of_chosen = number_of_chosen
+    def __init__(self, selection_size=None):
+        if selection_size<0:
+            raise ValueError("Number of individuals to select must be greater than 0")
+        self.selection_size = selection_size
 
     def select(self, population):
         pass
 
-    @property
-    def number_of_chosen(self):
-        return self.number_of_chosen
+    def get_selection_size(self):
+        return self.selection_size
 
-    @number_of_chosen.setter
-    def number_of_chosen(self, value):
+    def set_selection_size(self, value):
         if value < 0:
             raise ValueError("Number of individuals to select must be greater than 0")
-        self.number_of_chosen = value
+        self.selection_size = value
