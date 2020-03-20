@@ -4,7 +4,7 @@ import copy
 
 import numpy as np
 
-import ai.search.genetic as ga
+import ai.search.ga as ga
 
 
 class BaseCrossoverTest(unittest.TestCase):

@@ -2,26 +2,12 @@ import unittest
 import copy
 import random
 
-import numpy as np
-
-import ai.search.genetic as ga
+import ai.search.ga as ga
 
 
 class BaseMutationTest(unittest.TestCase):
     def setUp(self) -> None:
         self.mutation = ga.mutation.Mutation()
-
-    def testDefaultConstructor(self):
-        self.assertEqual(self.mutation.mutation_chance, 0.01)
-
-    def testConstructorSetMutationChance(self):
-        self.mutation = ga.mutation.Mutation(0.5)
-
-        self.assertEqual(self.mutation.mutation_chance, 0.5)
-
-    def testConstructorRaiseException(self):
-        self.assertRaises(ValueError, ga.mutation.Mutation, 1.5)
-        self.assertRaises(ValueError, ga.mutation.Mutation, -0.01)
 
     def testSetMutationChance(self):
         self.mutation.mutation_chance = 0.5
@@ -47,15 +33,10 @@ class BaseMutationTest(unittest.TestCase):
         self.assertEqual(gene2, True)
 
 
-class BasicMutation(ga.mutation.Mutation):
-    def mutateGene(self, gene):
-        return not gene
-
-
-class BasicMutationImplementationTest(unittest.TestCase):
+class FlipBitMutationTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.mutation = BasicMutation()
+        self.mutation = ga.mutation.FlipBitMutation()
 
     def testMutationOccurrence(self):
         gene = True
@@ -64,22 +45,22 @@ class BasicMutationImplementationTest(unittest.TestCase):
         self.assertEqual(gene, False)
 
     def testMaxMutationChance(self):
-        genotype = np.array([bool(random.randint(0, 1)) for i in range(100)])
-        negation = np.array([not genotype[i] for i in range(len(genotype))])
+        genotype = [bool(random.randint(0, 1)) for i in range(100)]
+        negation = [not genotype[i] for i in range(len(genotype))]
 
         self.mutation.mutation_chance = 1.0
         self.mutation.mutate(genotype)
 
-        self.assertListEqual(list(genotype), list(negation))
+        self.assertListEqual(genotype, negation)
 
     def testZeroMutationChance(self):
-        genotype = np.array([bool(random.randint(0, 1)) for i in range(100)])
+        genotype = [bool(random.randint(0, 1)) for i in range(100)]
         genotype_copy = copy.deepcopy(genotype)
 
         self.mutation.mutation_chance = 0.0
         self.mutation.mutate(genotype)
 
-        self.assertListEqual(list(genotype), list(genotype_copy))
+        self.assertListEqual(genotype, genotype_copy)
 
 
 if __name__ == "__main__":

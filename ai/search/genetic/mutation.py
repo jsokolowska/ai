@@ -18,7 +18,7 @@ class Mutation:
     def __init__(self, mutation_chance=0.01):
         self.mutation_chance = mutation_chance
 
-    def mutate(self, genotype):
+    def mutate(self, genotype) -> None:
         """
             Performs mutation on given genotype
 
@@ -46,12 +46,31 @@ class Mutation:
         return gene
 
     @property
-    def mutation_chance(self):
+    def mutation_chance(self) -> float:
         return self.__mutation_chance
 
     @mutation_chance.setter
-    def mutation_chance(self, value=0.01):
+    def mutation_chance(self, value: float) -> None:
         if value < 0.0 or value > 1.0:
             raise ValueError("Mutation chance value has to be a number from 0.0 to 1.0")
 
-        self.__mutation_chance = value
+        self.__mutation_chance = float(value)
+
+
+class FlipBitMutation(Mutation):
+    """
+        Standard flip bit mutation
+
+        Works only on genotypes that hold type that can be converted to boolean
+        Mutation is performed by flipping bit value of particular gene in genome
+    """
+    def mutateGene(self, gene: bool) -> bool:
+        """
+            Flips given bit value
+
+        :param gene: gene in form of boolean
+        :return: gene as boolean
+        """
+        return bool(not gene)
+
+

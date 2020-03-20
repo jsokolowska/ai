@@ -13,7 +13,7 @@ class Crossover:
         crossover defines strategy according to which parent genes are chosen
     """
 
-    def cross(self, parent_a, parent_b, inplace=False):
+    def cross(self, parent_a: [], parent_b: [], inplace=False):
         """
             Performs crossover of two individuals
 
