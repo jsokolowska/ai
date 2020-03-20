@@ -97,10 +97,9 @@ class SwapGeneMutation(Mutation):
             try:
                 pos1, pos2 = random.sample(range(len(genotype)), 2)
             except ValueError:
-                print("Sample size exceeded genotype length")
-                return
-
-            genotype[pos1], genotype[pos2] = genotype[pos2], genotype[pos1]
+                raise ValueError("Sample size exceeded genotype length")
+            else:
+                genotype[pos1], genotype[pos2] = genotype[pos2], genotype[pos1]
 
 
 class ScrambleGenesMutation(Mutation):
@@ -121,7 +120,8 @@ class ScrambleGenesMutation(Mutation):
         :param genotype: genotype of given individual
         :return: None
         """
-        assert len(genotype) >= 2
+        if len(genotype) < 2:
+            raise ValueError("Attempt to scramble genotype of length smaller than 2")
 
         if 0.0 < random.uniform(0.0, 1.0) <= self.mutation_chance:
             scramble_range = random.randint(2, len(genotype))   # Scramble at least 2 genes to be effective
@@ -132,3 +132,36 @@ class ScrambleGenesMutation(Mutation):
                 j = random.randint(position, i)
 
                 genotype[i], genotype[j] = genotype[j], genotype[i]
+
+
+class InverseGenesMutation(Mutation):
+    """
+        Mutation type that inverses genes position within randomly chosen range
+
+        This mutation type happens at most once within given genotype
+        Works on any gene type, genes can only change position
+        Useful for genotypes that represent permutations
+    """
+    def mutate(self, genotype: []) -> None:
+        """
+            Performs mutation instead of mutateGene() function
+
+            When mutation occurs, a position and inverse range are randomly
+            chosen, then positions of genes within that range are inverted
+
+        :param genotype: genotype of given individual
+        :return: None
+        """
+        if len(genotype) < 2:
+            raise ValueError("Attempt to inverse genotype of length smaller than 2")
+
+        if 0.0 < random.uniform(0.0, 1.0) <= self.mutation_chance:
+            inversion_range = random.randint(2, len(genotype))   # Inverse at least 2 genes to be effective
+            position = random.randint(0, len(genotype) - inversion_range)    # Prevents from going out of range
+
+            for i in range(0, int(inversion_range / 2)):
+                # Shift everything by position
+                index1 = i + position
+                index2 = inversion_range - 1 - i + position
+
+                genotype[index1], genotype[index2] = genotype[index2], genotype[index1]

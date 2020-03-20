@@ -93,15 +93,61 @@ class SwapGeneMutationTest(unittest.TestCase):
 
     def testTooSmallGenotype(self):
         genotype = np.array([3.14])
-        self.mutation.mutate(genotype)
 
-        self.assertListEqual(list(genotype), [3.14])
+        self.assertRaises(ValueError, self.mutation.mutate, genotype)
+
+    def testMutateGeneInheritance(self):
+        gene = True
+        gene = self.mutation.mutateGene(gene)
+
+        self.assertEqual(gene, True)
 
 
-class ScrambleGenesMutation(unittest.TestCase):
+class ScrambleGenesMutationTest(unittest.TestCase):
 
     def setUp(self) -> None:
         self.mutation = ga.mutation.ScrambleGenesMutation(1.0)
+
+    def testMutationOccurrenceBool(self):
+        random.seed(1)  # Allows test to pass
+
+        genotype = np.array([True, False])
+        self.mutation.mutate(genotype)
+
+        self.assertListEqual(list(genotype), [False, True])
+
+    def testMutationOccurrenceList(self):
+        random.seed(1)  # Allows test to pass
+
+        genotype = np.array([[1, 2], [3, 4, 5]])
+        self.mutation.mutate(genotype)
+
+        self.assertListEqual(list(genotype), [[3, 4, 5], [1, 2]])
+
+    def testZeroMutationChance(self):
+        genotype = np.array([1, 2])
+
+        self.mutation.mutation_chance = 0.0
+        self.mutation.mutate(genotype)
+
+        self.assertListEqual(list(genotype), [1, 2])
+
+    def testTooSmallGenotype(self):
+        genotype = np.array([3.14])
+
+        self.assertRaises(ValueError, self.mutation.mutate, genotype)
+
+    def testMutateGeneInheritance(self):
+        gene = True
+        gene = self.mutation.mutateGene(gene)
+
+        self.assertEqual(gene, True)
+
+
+class InverseGenesMutationTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.mutation = ga.mutation.InverseGenesMutation(1.0)
 
     def testMutationOccurrenceBool(self):
         genotype = np.array([True, False])
@@ -123,15 +169,17 @@ class ScrambleGenesMutation(unittest.TestCase):
 
         self.assertListEqual(list(genotype), [1, 2])
 
-    @unittest.expectedFailure
     def testTooSmallGenotype(self):
         genotype = np.array([3.14])
-        self.mutation.mutate(genotype)
 
-        self.assertRaises(AssertionError, self.mutation.mutate, genotype)   # AssertionErrors cannot be tested
+        self.assertRaises(ValueError, self.mutation.mutate, genotype)
+
+    def testMutateGeneInheritance(self):
+        gene = True
+        gene = self.mutation.mutateGene(gene)
+
+        self.assertEqual(gene, True)
 
 
 if __name__ == "__main__":
-    random.seed(3)  # Seed value that allows for ScrambleGenesMutation tests pass
-
     unittest.main()
