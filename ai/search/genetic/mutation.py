@@ -18,7 +18,7 @@ class Mutation:
     def __init__(self, mutation_chance=0.01):
         self.mutation_chance = mutation_chance
 
-    def mutate(self, genotype) -> None:
+    def mutate(self, genotype: []) -> None:
         """
             Performs mutation on given genotype
 
@@ -61,6 +61,7 @@ class FlipBitMutation(Mutation):
     """
         Standard flip bit mutation
 
+        This mutation type can occur more than once within single genotype
         Works only on genotypes that hold type that can be converted to boolean
         Mutation is performed by flipping bit value of particular gene in genome
     """
@@ -74,3 +75,38 @@ class FlipBitMutation(Mutation):
         return bool(not gene)
 
 
+class SwapGeneMutation(Mutation):
+    """
+        Mutation type that swaps two randomly chosen genes
+
+        This mutation type happens at most once within given genotype
+        Works on any gene type, only swap operation is performed
+    """
+    def mutate(self, genotype: []) -> None:
+        """
+            Performs mutation instead of mutateGene() function
+
+            When mutation occurs, two genes are chosen randomly and their
+            position in genotype is swapped
+
+        :param genotype: genotype of given individual
+        :return: None
+        """
+        if 0.0 < random.uniform(0.0, 1.0) <= self.mutation_chance:
+            try:
+                pos1, pos2 = random.sample(range(len(genotype)), 2)
+            except ValueError:
+                print("Sample size exceeded genotype length")
+                return
+
+            genotype[pos1], genotype[pos2] = genotype[pos2], genotype[pos1]
+
+    def mutateGene(self, gene) -> None:
+        """
+            Gene mutation is handled in mutate() function therefore this
+            function does nothing
+
+        :param gene: any gene type
+        :return: None
+        """
+        pass

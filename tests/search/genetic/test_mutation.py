@@ -2,10 +2,13 @@ import unittest
 import copy
 import random
 
+import numpy as np
+
 import ai.search.ga as ga
 
 
 class BaseMutationTest(unittest.TestCase):
+
     def setUp(self) -> None:
         self.mutation = ga.mutation.Mutation()
 
@@ -45,22 +48,54 @@ class FlipBitMutationTest(unittest.TestCase):
         self.assertEqual(gene, False)
 
     def testMaxMutationChance(self):
-        genotype = [bool(random.randint(0, 1)) for i in range(100)]
+        genotype = np.array([bool(random.randint(0, 1)) for i in range(100)])
         negation = [not genotype[i] for i in range(len(genotype))]
 
         self.mutation.mutation_chance = 1.0
         self.mutation.mutate(genotype)
 
-        self.assertListEqual(genotype, negation)
+        self.assertListEqual(list(genotype), negation)
 
     def testZeroMutationChance(self):
-        genotype = [bool(random.randint(0, 1)) for i in range(100)]
+        genotype = np.array([bool(random.randint(0, 1)) for i in range(100)])
         genotype_copy = copy.deepcopy(genotype)
 
         self.mutation.mutation_chance = 0.0
         self.mutation.mutate(genotype)
 
-        self.assertListEqual(genotype, genotype_copy)
+        self.assertListEqual(list(genotype), list(genotype_copy))
+
+
+class SwapGeneMutationTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.mutation = ga.mutation.SwapGeneMutation(1.0)
+
+    def testMutationOccurrenceBool(self):
+        genotype = np.array([True, False])
+        self.mutation.mutate(genotype)
+
+        self.assertListEqual(list(genotype), [False, True])
+
+    def testMutationOccurrenceList(self):
+        genotype = np.array([[1, 2], [3, 4, 5]])
+        self.mutation.mutate(genotype)
+
+        self.assertListEqual(list(genotype), [[3, 4, 5], [1, 2]])
+
+    def testZeroMutationChance(self):
+        genotype = np.array([1, 2])
+
+        self.mutation.mutation_chance = 0.0
+        self.mutation.mutate(genotype)
+
+        self.assertListEqual(list(genotype), [1, 2])
+
+    def testTooSmallGenotype(self):
+        genotype = np.array([3.14])
+        self.mutation.mutate(genotype)
+
+        self.assertListEqual(list(genotype), [3.14])
 
 
 if __name__ == "__main__":
