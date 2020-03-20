@@ -9,6 +9,18 @@ class BaseMutationTest(unittest.TestCase):
     def setUp(self) -> None:
         self.mutation = ga.mutation.Mutation()
 
+    def testDefaultConstructor(self):
+        self.assertEqual(self.mutation.mutation_chance, 0.01)
+
+    def testConstructorSetMutationChance(self):
+        self.mutation = ga.mutation.Mutation(0.5)
+
+        self.assertEqual(self.mutation.mutation_chance, 0.5)
+
+    def testConstructorRaiseException(self):
+        self.assertRaises(ValueError, ga.mutation.Mutation, 1.5)
+        self.assertRaises(ValueError, ga.mutation.Mutation, -0.01)
+
     def testSetMutationChance(self):
         self.mutation.mutation_chance = 0.5
 
