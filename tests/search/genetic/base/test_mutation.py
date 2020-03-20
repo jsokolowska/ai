@@ -2,6 +2,8 @@ import unittest
 import copy
 import random
 
+import numpy as np
+
 import ai.search.genetic as ga
 
 
@@ -62,22 +64,22 @@ class BasicMutationImplementationTest(unittest.TestCase):
         self.assertEqual(gene, False)
 
     def testMaxMutationChance(self):
-        genotype = [bool(random.randint(0, 1)) for i in range(100)]
-        negation = [not genotype[i] for i in range(len(genotype))]
+        genotype = np.array([bool(random.randint(0, 1)) for i in range(100)])
+        negation = np.array([not genotype[i] for i in range(len(genotype))])
 
         self.mutation.mutation_chance = 1.0
         self.mutation.mutate(genotype)
 
-        self.assertListEqual(genotype, negation)
+        self.assertListEqual(list(genotype), list(negation))
 
     def testZeroMutationChance(self):
-        genotype = [bool(random.randint(0, 1)) for i in range(100)]
+        genotype = np.array([bool(random.randint(0, 1)) for i in range(100)])
         genotype_copy = copy.deepcopy(genotype)
 
         self.mutation.mutation_chance = 0.0
         self.mutation.mutate(genotype)
 
-        self.assertListEqual(genotype, genotype_copy)
+        self.assertListEqual(list(genotype), list(genotype_copy))
 
 
 if __name__ == "__main__":
